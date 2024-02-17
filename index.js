@@ -1,11 +1,11 @@
-/* exported gapiLoaded */
-/* exported gisLoaded */
-/* exported handleAuthClick */
-/* exported handleSignoutClick */
+import {
+  formatTaskName,
+  formatTaskPoints,
+  formatTaskFront,
+  formatDateEnd,
+} from "./js/formatters.js";
 
-var spreadsheetId = '1rqDi_CXdIQ5yRAiyouQQ3TFp1kVVvf_zt48eDDvx9rA'
-
-let POsNames = ['Eduarda Lopes', 'Jéssica Lemes', 'Natália Kolm', 'Gabriela Mello']
+var spreadsheetId = "1rqDi_CXdIQ5yRAiyouQQ3TFp1kVVvf_zt48eDDvx9rA";
 
 // TODO(developer): Set to client ID and API key from the Developer Console
 const CLIENT_ID =
@@ -134,109 +134,70 @@ async function returnTasks() {
 
 function formatTasks(tasks) {
   console.log("formatTasks", tasks);
-	if (!tasks.result.values) return	
-	
-	let newTasks = []
+  if (!tasks.result.values) return;
 
-	for (task of tasks.result.values) {
-		// console.log(task)
-		if (task.length >= 3){
-			console.log('tassssk', task)
-			let taskName = task[0]
-			let name = task[1]
-			let date = task[3]
+  let newTasks = [];
 
-			let nameFront = formatTaskFront(name)
-			let nameTask = formatTaskName(taskName)
-			let pointsTask = formatTaskPoints(taskName)
+  for (let task of tasks.result.values) {
+    // console.log(task)
+    if (task.length >= 3) {
+      console.log("tassssk", task);
+      let taskName = task[0];
+      let name = task[1];
+      let date = task[3];
 
-			console.log('ANTES DA CHAMADA', date)
+      let nameFront = formatTaskFront(name);
+      let nameTask = formatTaskName(taskName);
+      let pointsTask = formatTaskPoints(taskName);
 
-			let dateEndTask = formatDateEnd(date)
+      console.log("ANTES DA CHAMADA", date);
 
+      let dateEndTask = formatDateEnd(date);
 
-			newTasks.push([nameTask, pointsTask, nameFront, dateEndTask])
-		}
-	}
-	console.log(newTasks)
-	insertValues(newTasks)
-}
-
-function formatTaskName(taskName){
-	let taskNameSplit = taskName.split('|')
-	// taskNameSplit = taskNameSplit[0].replace(' ', '')
-	return taskNameSplit[0]
-}
-
-function formatTaskPoints(taskPoints){
-	let taskPointsSplit = taskPoints.split('|')
-	// taskPointsSplit = taskPointsSplit[1].replace(' ', '')
-	return taskPointsSplit[1]
-}
-
-function formatTaskFront(nameFrontPO){
-	let name
-	if (nameFrontPO){
-		for (POname of POsNames){
-			if (nameFrontPO.includes(POname)){
-				name = nameFrontPO.replace(POname, '')
-				name = name.replace(',', '')
-				name = name.replace(' ', '')
-			}
-		}
-		return name
-	}
-}
-
-function formatDateEnd(date){
-	let newdate
-	date = date.toLowerCase()
-	console.log('dateaaa', date)
-	if (date){
-		if (date.includes('ontem') || date.includes('hoje') || date.includes('atrás')){
-			if (date.includes('ontem')){
-				console.log('ontem')
-				newdate = moment().subtract(1, 'days');
-			}
-			if (date.includes('hoje')){
-				console.log('hoje')
-				newdate = moment();
-			}
-			if (date.includes('atrás')){
-				let dataString = date.split('dias')
-				dataString = dataString[0].replace(' ', '')
-				console.log('atrás', dataString)
-				newdate = moment().subtract(parseInt(dataString), 'days');
-
-				console.log('newdate atras', newdate)
-			}
-			newdate = newdate.format('DD/MM/YYYY');
-		}else{
-			newdate = date
-		}
-		
-		return newdate
-	}
+      newTasks.push([nameTask, pointsTask, nameFront, dateEndTask]);
+    }
+  }
+  console.log(newTasks);
+  insertValues(newTasks);
 }
 
 async function insertValues(values) {
-	console.log('insertValues')
-	await gapi.client.sheets.spreadsheets.values.update({
-		spreadsheetId: "1rqDi_CXdIQ5yRAiyouQQ3TFp1kVVvf_zt48eDDvx9rA",
-		range: 'Sheet2', // Pode ser ajustado conforme necessário
-		valueInputOption: 'RAW',
-		resource: {
-			values: values,
-		},
-	}).then((response) => {
-		console.log('Valores inseridos com sucesso:', response.result);
-	}, (error) => {
-		console.error('Erro ao inserir valores:', error.result.error.message);
-	});
+  console.log("insertValues");
+  await gapi.client.sheets.spreadsheets.values
+    .update({
+      spreadsheetId: "1rqDi_CXdIQ5yRAiyouQQ3TFp1kVVvf_zt48eDDvx9rA",
+      range: "Sheet2", // Pode ser ajustado conforme necessário
+      valueInputOption: "RAW",
+      resource: {
+        values: values,
+      },
+    })
+    .then(
+      (response) => {
+        console.log("Valores inseridos com sucesso:", response.result);
+      },
+      (error) => {
+        console.error("Erro ao inserir valores:", error.result.error.message);
+      }
+    );
+}
+
+function buttonsListeners() {
+  let authorize = document.getElementById("authorize_button");
+  let signout_button = document.getElementById("signout_button");
+
+  authorize.addEventListener("click", () => {
+    handleAuthClick();
+  });
+
+  signout_button.addEventListener("click", () => {
+    handleSignoutClick();
+  });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log("loaded index.js 2.0");
   gapiLoaded();
   gisLoaded();
+  buttonsListeners();
 });
