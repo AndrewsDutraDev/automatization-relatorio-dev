@@ -1,3 +1,4 @@
+import { Calculate } from "./calculate.js";
 import {
   formatTaskName,
   formatTaskPoints,
@@ -5,7 +6,7 @@ import {
   formatDateEnd,
 } from "./formatters.js";
 
-import { totalResults } from "./htmlElements.js";
+import { rendertotalPoints, rendertotalResults } from "./htmlElements.js";
 
 export const Spreedsheet = {
   spreadsheetId: "1rqDi_CXdIQ5yRAiyouQQ3TFp1kVVvf_zt48eDDvx9rA",
@@ -71,7 +72,8 @@ export const Spreedsheet = {
       })
       .then(
         (response) => {
-          totalResults(values.length);
+          rendertotalResults(values.length);
+          rendertotalPoints(Calculate.showTotalPoints())
           console.log("Valores inseridos com sucesso:", response.result);
         },
         (error) => {
