@@ -38,13 +38,12 @@ export const Spreedsheet = {
     return;
   },
   formatTasks: function (tasks) {
-    console.log("formatTasks", tasks);
     if (!tasks.result.values) return;
 
     let newTasks = [];
 
     for (let task of tasks.result.values) {
-      if (task.length >= 3) {
+      if (task[0] != '' && task[1] != '' && task[3] != '') {
         let taskName = task[0];
         let name = task[1];
         let date = task[3];
@@ -54,7 +53,9 @@ export const Spreedsheet = {
         let pointsTask = formatTaskPoints(taskName);
         let dateEndTask = formatDateEnd(date);
 
-        newTasks.push([nameTask, nameFront, dateEndTask, pointsTask]);
+        if (nameTask && nameFront && dateEndTask && pointsTask){
+          newTasks.push([nameTask, nameFront, dateEndTask, pointsTask]);
+        }
       }
     }
     Spreedsheet.insertValues(newTasks);

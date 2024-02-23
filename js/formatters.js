@@ -8,15 +8,16 @@ var POsNames = [
 ];
 
 export function formatTaskName(taskName){
+	if (!taskName) return
 	let taskNameSplit = taskName.split('|')
 	// taskNameSplit = taskNameSplit[0].replace(' ', '')
 	return taskNameSplit[0]
 }
 
 export function formatTaskPoints(taskPoints){
+	if (!taskPoints) return
 	let taskPointsSplit = taskPoints.split(' | ')
 	let points = taskPointsSplit[1]
-	console.log(points)
 	if (points){
 		points = points.replace("'", '')
 		Calculate.totalPoints(points)
@@ -40,6 +41,7 @@ export function formatTaskFront(nameFrontPO){
 
 export function formatDateEnd(date){
 	let newdate
+	if (!date) return
 	date = date.toLowerCase()
 	if (date){
 		if (date.includes('ontem') || date.includes('hoje') || date.includes('atrás')){
