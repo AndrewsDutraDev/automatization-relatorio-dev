@@ -54,7 +54,7 @@ export const Spreedsheet = {
         let pointsTask = formatTaskPoints(taskName);
         let dateEndTask = formatDateEnd(date);
 
-        newTasks.push([nameTask, pointsTask, nameFront, dateEndTask]);
+        newTasks.push([nameTask, nameFront, dateEndTask, pointsTask]);
       }
     }
     Spreedsheet.insertValues(newTasks);
