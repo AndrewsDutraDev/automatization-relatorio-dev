@@ -17,9 +17,11 @@ export function formatTaskPoints(taskPoints){
 	let taskPointsSplit = taskPoints.split(' | ')
 	let points = taskPointsSplit[1]
 	console.log(points)
-	points = points.replace("'", '')
-	Calculate.totalPoints(points)
-	return parseInt(points)
+	if (points){
+		points = points.replace("'", '')
+		Calculate.totalPoints(points)
+		return parseInt(points)
+	}
 }
 
 export function formatTaskFront(nameFrontPO){
